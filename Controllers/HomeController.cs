@@ -35,6 +35,9 @@ namespace Mais_Kitchen.Controllers
                 .Take(12)
                 .ToListAsync();
 
+            // Debug logging
+            Console.WriteLine($"[DEBUG] Categories: {categories.Count}, Restaurants: {restaurants.Count}, FeaturedItems: {featuredItems.Count}");
+
             var model = new
             {
                 Categories = categories,

@@ -13,154 +13,220 @@
                         ?? Enumerable.Empty<Mais_Kitchen.Models.FoodItem>();
 }
 
-@if (categories.Any())
-{
-    foreach (var category in categories)
-    {
-        var categoryName = category?.CategoryName ?? "Other";
-        var lowerName = categoryName.ToLowerInvariant();
-
-        <div class="col-lg-2 col-md-4 col-6">
-            <a href="@Url.Action("Menu", "Home", new { categoryId = category?.CategoryID })"
-                   class="text-decoration-none">
-
-                <div class="category-card">
-                    @switch (lowerName)
-                    {
-                        case "pizza":
-                            <i class="fas fa-pizza-slice"></i>
-                            break;
-                        case "burgers":
-                            <i class="fas fa-hamburger"></i>
-                            break;
-                        case "chinese":
-                            <i class="fas fa-dragon"></i>
-                            break;
-                        case "indian":
-                            <i class="fas fa-pepper-hot"></i>
-                            break;
-                        case "desserts":
-                            <i class="fas fa-ice-cream"></i>
-                            break;
-                        default:
-                            <i class="fas fa-utensils"></i>
-                            break;
-                    }
-
-                    <h6 class="mt-2">@categoryName</h6>
-                </div>
-            </a>
-        </div>
-    }
-}
-
-@if (restaurants.Any())
-{
-    foreach (var restaurant in restaurants)
-    {
-        var imageUrl = string.IsNullOrWhiteSpace(restaurant?.ImageUrl)
-            ? "/images/default-restaurant.jpg"
-            : restaurant.ImageUrl;
-
-        <div class="col-lg-3 col-md-6">
-            <div class="card restaurant-card h-100">
-                <img src="@imageUrl"
-                     class="card-img-top"
-                     alt="@(restaurant?.RestaurantName ?? "Restaurant")">
-
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">
-                        @(restaurant?.RestaurantName ?? "Restaurant")
-                    </h5>
-
-                    <p class="card-text text-muted flex-grow-1">
-                        @(restaurant?.Description ?? "No description available.")
-                    </p>
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge-rating">
-                            <i class="fas fa-star"></i>
-                            @(restaurant?.Rating.ToString("F1") ?? "0.0")
-                        </span>
-
-                        <span class="text-muted">
-                            <i class="fas fa-clock"></i>
-                            @(restaurant?.DeliveryTime ?? 0) min
-                        </span>
+<!-- Hero Section - Always visible -->
+<section class="slider_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="detail-box text-center py-5">
+                    <h1>Welcome to Mai's Kitchen</h1>
+                    <p>Order delicious food from your favorite restaurants</p>
+                    <div class="btn-box mt-4">
+                        <a href="@Url.Action("Menu", "Home")" class="btn btn-primary btn-lg">Order Now</a>
                     </div>
-
-                    <a href="@Url.Action("RestaurantDetails", "Home",
-                                                                          new { id = restaurant?.RestaurantID })"
-                           class="btn btn-primary mt-3">
-                        View Menu
-                    </a>
                 </div>
             </div>
         </div>
-    }
-}
+    </div>
+</section>
 
-@if (featuredItems.Any())
-{
-    foreach (var item in featuredItems)
-    {
-        var imageUrl = string.IsNullOrWhiteSpace(item?.ImageUrl)
-            ? "/images/default-food.jpg"
-            : item.ImageUrl;
+<!-- Categories Section -->
+<section class="food_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center mb-4">
+            <h2>Browse By <span>Category</span></h2>
+        </div>
 
-        <div class="col-lg-3 col-md-6">
-            <div class="card food-card h-100">
-                <img src="@imageUrl"
-                     class="card-img-top"
-                     alt="@(item?.FoodName ?? "Food Item")">
+        @if (categories.Any())
+        {
+            <div class="row justify-content-center">
+                @foreach (var category in categories)
+                {
+                    var categoryName = category?.CategoryName ?? "Other";
+                    var lowerName = categoryName.ToLowerInvariant();
 
-                <div class="card-body d-flex flex-column">
+                    <div class="col-lg-2 col-md-4 col-6">
+                        <a href="@Url.Action("Menu", "Home", new { categoryId = category?.CategoryID })"
+                           class="text-decoration-none">
 
-                    <h5 class="card-title">
-                        @(item?.FoodName ?? "Food Item")
-                    </h5>
+                            <div class="category-card">
+                                @switch (lowerName)
+                                {
+                                    case "pizza":
+                                        <i class="fas fa-pizza-slice"></i>
+                                        break;
+                                    case "burgers":
+                                        <i class="fas fa-hamburger"></i>
+                                        break;
+                                    case "chinese":
+                                        <i class="fas fa-dragon"></i>
+                                        break;
+                                    case "indian":
+                                        <i class="fas fa-pepper-hot"></i>
+                                        break;
+                                    case "desserts":
+                                        <i class="fas fa-ice-cream"></i>
+                                        break;
+                                    default:
+                                        <i class="fas fa-utensils"></i>
+                                        break;
+                                }
 
-                    <p class="card-text text-muted small">
-                        @(item?.Restaurant?.RestaurantName ?? "Unknown Restaurant")
-                    </p>
-
-                    <p class="card-text flex-grow-1">
-                        @(item?.Description ?? "No description available.")
-                    </p>
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="food-price">
-                            $@(item?.Price.ToString("F2") ?? "0.00")
-                        </span>
-
-                        @if (item?.IsVeg == true)
-                        {
-                            <span class="badge bg-success">Veg</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger">Non-Veg</span>
-                        }
-                    </div>
-
-                    @if (User?.Identity?.IsAuthenticated == true)
-                    {
-                        <button class="btn btn-primary mt-3"
-                                onclick="addToCart(@(item?.FoodItemID ?? 0))">
-                            <i class="fas fa-plus"></i> Add to Cart
-                        </button>
-                    }
-                    else
-                    {
-                        <a href="@Url.Action("Login", "Account")"
-                               class="btn btn-outline-primary mt-3">
-                            Login to Order
+                                <h6 class="mt-2">@categoryName</h6>
+                            </div>
                         </a>
-                    }
-                </div>
+                    </div>
+                }
             </div>
-        </div>
-    }
-}
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                <p>No categories available at the moment. Our menu is being updated!</p>
+            </div>
+        }
+    </div>
+</section>
 
+<!-- Restaurants Section -->
+<section class="restaurant_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center mb-4">
+            <h2>Top <span>Restaurants</span></h2>
+        </div>
+
+        @if (restaurants.Any())
+        {
+            <div class="row">
+                @foreach (var restaurant in restaurants)
+                {
+                    var imageUrl = string.IsNullOrWhiteSpace(restaurant?.ImageUrl)
+                        ? "/images/default-restaurant.jpg"
+                        : restaurant.ImageUrl;
+
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card restaurant-card h-100">
+                            <img src="@imageUrl"
+                                 class="card-img-top"
+                                 alt="@(restaurant?.RestaurantName ?? "Restaurant")">
+
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">
+                                    @(restaurant?.RestaurantName ?? "Restaurant")
+                                </h5>
+
+                                <p class="card-text text-muted flex-grow-1">
+                                    @(restaurant?.Description ?? "No description available.")
+                                </p>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge-rating">
+                                        <i class="fas fa-star"></i>
+                                        @(restaurant?.Rating.ToString("F1") ?? "0.0")
+                                    </span>
+
+                                    <span class="text-muted">
+                                        <i class="fas fa-clock"></i>
+                                        @(restaurant?.DeliveryTime ?? 0) min
+                                    </span>
+                                </div>
+
+                                <a href="@Url.Action("RestaurantDetails", "Home", new { id = restaurant?.RestaurantID })"
+                                   class="btn btn-primary mt-3">
+                                    View Menu
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                <p>No restaurants available at the moment. Check back soon!</p>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Featured Items Section -->
+<section class="featured_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center mb-4">
+            <h2>Featured <span>Items</span></h2>
+        </div>
+
+        @if (featuredItems.Any())
+        {
+            <div class="row">
+                @foreach (var item in featuredItems)
+                {
+                    var imageUrl = string.IsNullOrWhiteSpace(item?.ImageUrl)
+                        ? "/images/default-food.jpg"
+                        : item.ImageUrl;
+
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card food-card h-100">
+                            <img src="@imageUrl"
+                                 class="card-img-top"
+                                 alt="@(item?.FoodName ?? "Food Item")">
+
+                            <div class="card-body d-flex flex-column">
+
+                                <h5 class="card-title">
+                                    @(item?.FoodName ?? "Food Item")
+                                </h5>
+
+                                <p class="card-text text-muted small">
+                                    @(item?.Restaurant?.RestaurantName ?? "Unknown Restaurant")
+                                </p>
+
+                                <p class="card-text flex-grow-1">
+                                    @(item?.Description ?? "No description available.")
+                                </p>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="food-price">
+                                        $@(item?.Price.ToString("F2") ?? "0.00")
+                                    </span>
+
+                                    @if (item?.IsVeg == true)
+                                    {
+                                        <span class="badge bg-success">Veg</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Non-Veg</span>
+                                    }
+                                </div>
+
+                                @if (User?.Identity?.IsAuthenticated == true)
+                                {
+                                    <button class="btn btn-primary mt-3"
+                                            onclick="addToCart(@(item?.FoodItemID ?? 0))">
+                                        <i class="fas fa-plus"></i> Add to Cart
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Login", "Account")"
+                                       class="btn btn-outline-primary mt-3">
+                                        Login to Order
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                <p>No featured items available at the moment. Explore our full menu!</p>
+            </div>
+        }
+    </div>
+</section>
 
