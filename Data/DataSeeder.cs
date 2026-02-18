@@ -48,6 +48,8 @@ namespace Mais_Kitchen.Data
                 context.SaveChanges();
             }
 
+            // Note: Must persist Categories and Restaurants before creating FoodItems
+            // because FoodItems queries reference data
             if (!context.FoodItems.Any())
             {
                 var firstRestaurant = context.Restaurants.First();
