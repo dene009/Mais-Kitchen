@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Mais_Kitchen.Models.Order>
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<section class="food_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>My Orders</h2>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="accordion" id="ordersAccordion">
+                @foreach (var order in Model)
+                {
+                    string orderId = $"order{order.OrderID}";
+                    string statusClass = order.OrderStatus switch
+                    {
+                        "Pending" => "badge-warning",
+                        "Preparing" => "badge-info",
+                        "Out for Delivery" => "badge-primary",
+                        "Delivered" => "badge-success",
+                        "Cancelled" => "badge-danger",
+                        _ => "badge-secondary"
+                    };
+
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center" id="heading-@orderId">
+                            <div>
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link text-dark text-decoration-none" type="button"
+                                            data-toggle="collapse" data-target="#@orderId" aria-expanded="false" aria-controls="@orderId">
+                                        <i class="fa fa-receipt"></i> Order #@order.OrderID
+                                    </button>
+                                </h5>
+                                <small class="text-muted">
+                                    @order.OrderDate.ToString("MMM dd, yyyy hh:mm tt")
+                                </small>
+                            </div>
+                            <div>
+                                <span class="badge @statusClass">@order.OrderStatus</span>
+                            </div>
+                        </div>
+
+                        <div id="@orderId" class="collapse" data-parent="#ordersAccordion">
+                            <div class="card-body">
+                                <h6><i class="fa fa-store text-warning"></i> @order.Restaurant.RestaurantName</h6>
+                                <hr />
+                                <table class="table table-sm">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Qty</th>
+                                            <th>Price</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in order.OrderItems)
+                                        {
+                                            <tr>
+                                                <td>@item.FoodItem.FoodName</td>
+                                                <td>@item.Quantity</td>
+                                                <td>$@item.Price.ToString("0.00")</td>
+                                                <td>$@item.TotalPrice.ToString("0.00")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <p><strong>Payment Method:</strong> @order.PaymentMethod</p>
+                                        <p><strong>Payment Status:</strong> @order.PaymentStatus</p>
+                                        <p><strong>Delivery Address:</strong> @order.DeliveryAddress</p>
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                        <p><strong>Subtotal:</strong> $@order.TotalAmount.ToString("0.00")</p>
+                                        <p><strong>Delivery Fee:</strong> $@order.DeliveryFee.ToString("0.00")</p>
+                                        <p><strong>Total Paid:</strong> <span class="text-success fw-bold">$@order.FinalAmount.ToString("0.00")</span></p>
+                                    </div>
+                                </div>
+
+                                <div class="text-end">
+                                    <span class="text-muted">
+                                        Estimated Delivery:
+                                        @(order.DeliveryTime?.ToString("MMM dd, yyyy hh:mm tt") ?? "Pending Confirmation")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center mt-4">
+                <i class="fa fa-folder-open fa-4x text-muted mb-3"></i>
+                <p class="text-muted">You have not placed any orders yet.</p>
+                <a href="@Url.Action("Menu", "Home")" class="btn btn-warning">
+                    <i class="fa fa-utensils"></i> Browse Menu
+                </a>
+            </div>
+        }
+    </div>
+</section>

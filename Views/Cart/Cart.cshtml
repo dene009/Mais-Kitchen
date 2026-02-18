@@ -1,0 +1,158 @@
+﻿@model IEnumerable<Mais_Kitchen.Models.CartItem>
+
+@{
+    ViewData["Title"] = "My Cart";
+
+    var cartItems = Model ?? Enumerable.Empty<Mais_Kitchen.Models.CartItem>();
+
+    decimal subtotal = cartItems.Sum(i =>
+        (i.FoodItem?.Price ?? 0M) * i.Quantity);
+
+    decimal deliveryFee = 2.99M;
+    decimal tax = subtotal * 0.08M;
+    decimal total = subtotal + deliveryFee + tax;
+}
+
+<section class="food_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>Your Cart</h2>
+        </div>
+
+        @if (cartItems.Any())
+        {
+            <div class="table-responsive">
+                <table class="table align-middle shadow-sm">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Food</th>
+                            <th>Restaurant</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in cartItems)
+                        {
+                            var food = item.FoodItem;
+                            var price = food?.Price ?? 0M;
+                            var imageUrl = string.IsNullOrWhiteSpace(food?.ImageUrl)
+                                ? "/images/default-food.jpg"
+                                : food.ImageUrl;
+
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="@imageUrl"
+                                             width="60"
+                                             class="rounded me-3" />
+                                        <div>@(food?.FoodName ?? "Unknown Item")</div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @(food?.Restaurant?.RestaurantName ?? "Unknown")
+                                </td>
+
+                                <td>
+                                    $@price.ToString("0.00")
+                                </td>
+
+                                <td>
+                                    <form asp-action="UpdateQuantity"
+                                          method="post"
+                                          class="d-inline-flex">
+
+                                        <input type="hidden"
+                                               name="cartId"
+                                               value="@item.CartID" />
+
+                                        <input type="number"
+                                               name="quantity"
+                                               value="@item.Quantity"
+                                               min="1"
+                                               max="10"
+                                               class="form-control form-control-sm"
+                                               style="width:60px;" />
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-info ms-2">
+                                            <i class="fa fa-sync"></i>
+                                        </button>
+                                    </form>
+                                </td>
+
+                                <td>
+                                    $@( (price * item.Quantity).ToString("0.00") )
+                                </td>
+
+                                <td>
+                                    <form asp-action="RemoveFromCart"
+                                          method="post">
+
+                                        <input type="hidden"
+                                               name="cartId"
+                                               value="@item.CartID" />
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card p-4 shadow-sm mt-4">
+                <div class="d-flex justify-content-between">
+                    <span>Subtotal:</span>
+                    <strong>$@subtotal.ToString("0.00")</strong>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <span>Delivery Fee:</span>
+                    <strong>$@deliveryFee.ToString("0.00")</strong>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <span>Tax (8%):</span>
+                    <strong>$@tax.ToString("0.00")</strong>
+                </div>
+
+                <hr />
+
+                <div class="d-flex justify-content-between">
+                    <h5>Total:</h5>
+                    <h5>$@total.ToString("0.00")</h5>
+                </div>
+
+                <div class="text-end mt-3">
+                    <a asp-controller="Order"
+                           asp-action="Checkout"
+                           class="btn btn-primary btn-lg">
+                        Proceed to Checkout <i class="fa fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p class="text-center text-muted mt-4">
+                Your cart is empty. Start adding some delicious food!
+            </p>
+
+            <div class="text-center mt-3">
+                <a asp-controller="Home"
+                       asp-action="Menu"
+                       class="btn btn-warning">
+                    <i class="fa fa-utensils"></i> Browse Menu
+                </a>
+            </div>
+        }
+    </div>
+</section>

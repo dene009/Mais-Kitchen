@@ -1,0 +1,160 @@
+﻿@model IEnumerable<Mais_Kitchen.Models.Order>
+
+@{
+    ViewData["Title"] = "Manage Orders";
+}
+
+@Html.AntiForgeryToken()
+
+<section class="food_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center mb-4">
+            <h2>Manage Orders</h2>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table shadow-sm align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Order #</th>
+                        <th>User</th>
+                        <th>Restaurant</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Date</th>
+                        <th>Badge</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        string badgeClass = order.OrderStatus switch
+                        {
+                            "Pending" => "bg-warning",
+                            "Preparing" => "bg-info",
+                            "Out for Delivery" => "bg-primary",
+                            "Delivered" => "bg-success",
+                            "Cancelled" => "bg-danger",
+                            _ => "bg-secondary"
+                        };
+
+                        <tr id="order-row-@order.OrderID">
+                            <td>@order.OrderID</td>
+                            <td>@order.User?.FullName</td>
+                            <td>@order.Restaurant?.RestaurantName</td>
+                            <td>$@order.FinalAmount.ToString("0.00")</td>
+
+                            <td>
+                                <select class="form-select form-select-sm order-status"
+                                        data-id="@order.OrderID"
+                                        style="min-width:150px;">
+                                    @{
+                                        string[] statuses =
+                                        { "Pending", "Preparing", "Out for Delivery", "Delivered", "Cancelled" };
+
+                                        foreach (var s in statuses)
+                                        {
+                                            <option value="@s" selected="@(order.OrderStatus == s)">
+                                                @s
+                                            </option>
+                                        }
+                                    }
+                                </select>
+                            </td>
+
+                            <td>@order.PaymentMethod</td>
+                            <td>@order.OrderDate.ToString("MMM dd, yyyy HH:mm")</td>
+
+                            <td>
+                                <span class="badge @badgeClass" id="badge-@order.OrderID">
+                                    @order.OrderStatus
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            $('.order-status').change(function () {
+
+                var dropdown = $(this);
+                var orderId = dropdown.data('id');
+                var newStatus = dropdown.val();
+
+                dropdown.prop("disabled", true);
+
+                $.ajax({
+                    url: '@Url.Action("UpdateOrderStatus", "Admin")',
+                    type: 'POST',
+                    headers: {
+                        'RequestVerificationToken':
+                            $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    data: {
+                        orderId: orderId,
+                        newStatus: newStatus
+                    },
+                    success: function (response) {
+
+                        dropdown.prop("disabled", false);
+
+                        if (response.success) {
+
+                            var badge = $('#badge-' + orderId);
+                            badge.text(newStatus);
+
+                            let badgeClass = "bg-secondary";
+
+                            switch(newStatus){
+                                case "Pending": badgeClass = "bg-warning"; break;
+                                case "Preparing": badgeClass = "bg-info"; break;
+                                case "Out for Delivery": badgeClass = "bg-primary"; break;
+                                case "Delivered": badgeClass = "bg-success"; break;
+                                case "Cancelled": badgeClass = "bg-danger"; break;
+                            }
+
+                            badge.removeClass().addClass('badge ' + badgeClass);
+                            showToast(true, response.message);
+                        }
+                        else {
+                            showToast(false, response.message);
+                        }
+                    },
+                    error: function () {
+                        dropdown.prop("disabled", false);
+                        showToast(false, "Something went wrong.");
+                    }
+                });
+            });
+
+            function showToast(success, message) {
+
+                const toast = $(`
+                    <div class="toast text-white bg-${success ? 'success' : 'danger'} border-0" role="alert">
+                        <div class="d-flex">
+                            <div class="toast-body">${message}</div>
+                            <button type="button" class="btn-close btn-close-white m-auto me-2"
+                                data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>
+                `);
+
+                if (!$('.toast-container').length)
+                    $('body').append('<div class="toast-container position-fixed bottom-0 end-0 p-3"></div>');
+
+                $('.toast-container').append(toast);
+                new bootstrap.Toast(toast[0]).show();
+
+                setTimeout(() => toast.remove(), 5000);
+            }
+        });
+    </script>
+}

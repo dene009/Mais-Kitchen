@@ -1,0 +1,139 @@
+﻿@model IEnumerable<Mais_Kitchen.Models.FoodItem>
+
+@{
+    ViewData["Title"] = "Menu";
+
+    var categories = ViewBag.Categories as List<Mais_Kitchen.Models.Category>
+                     ?? new List<Mais_Kitchen.Models.Category>();
+
+    var restaurants = ViewBag.Restaurants as List<Mais_Kitchen.Models.Restaurant>
+                      ?? new List<Mais_Kitchen.Models.Restaurant>();
+
+    int? selectedCategoryId = ViewBag.SelectedCategoryId as int?;
+    int? selectedRestaurantId = ViewBag.SelectedRestaurantId as int?;
+
+    var foodItems = Model?.ToList() ?? new List<Mais_Kitchen.Models.FoodItem>();
+
+    var isAuthenticated = User?.Identity?.IsAuthenticated == true;
+}
+
+<section class="food_section layout_padding">
+    <div class="container">
+
+        <!-- Page Heading -->
+        <div class="heading_container heading_center mb-4">
+            <h2>Browse Our Menu</h2>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8">
+
+                <form method="get" asp-controller="Home" asp-action="Menu" class="row g-2">
+
+                    <!-- Category Filter -->
+                    <div class="col-md-5">
+                        <select name="categoryId" class="form-control">
+                            <option value="">All Categories</option>
+                            @foreach (var cat in categories)
+                            {
+                                <option value="@cat.CategoryID"
+                                        selected="@(selectedCategoryId == cat.CategoryID)">
+                                    @(cat.CategoryName ?? "Unnamed Category")
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Restaurant Filter -->
+                    <div class="col-md-5">
+                        <select name="restaurantId" class="form-control">
+                            <option value="">All Restaurants</option>
+                            @foreach (var rest in restaurants)
+                            {
+                                <option value="@rest.RestaurantID"
+                                        selected="@(selectedRestaurantId == rest.RestaurantID)">
+                                    @(rest.RestaurantName ?? "Unnamed Restaurant")
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Search Button -->
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i> Filter
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+        <!-- Food Grid -->
+        <div class="row">
+
+            @if (foodItems.Any())
+            {
+                foreach (var item in foodItems)
+                {
+                    var imageUrl = string.IsNullOrWhiteSpace(item.ImageUrl)
+                                   ? "/images/default-food.jpg"
+                                   : item.ImageUrl;
+
+                    <div class="col-sm-6 col-lg-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+
+                            <img src="@imageUrl"
+                                 class="card-img-top"
+                                 alt="@(item.FoodName ?? "Food Item")"
+                                 style="height: 220px; object-fit: cover;" />
+
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">
+                                    @(item.FoodName ?? "Unnamed Item")
+                                </h5>
+
+                                <p class="card-text text-muted flex-grow-1">
+                                    @(item.Description ?? "")
+                                </p>
+
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <h6 class="mb-0 text-primary">
+                                        $@item.Price.ToString("0.00")
+                                    </h6>
+
+                                    @if (isAuthenticated)
+                                    {
+                                        <button class="btn btn-sm btn-outline-primary"
+                                                onclick="addToCart(@item.FoodItemID)">
+                                            <i class="fa fa-shopping-cart"></i>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="Account"
+                                               asp-action="Login"
+                                               class="btn btn-sm btn-outline-secondary">
+                                            <i class="fa fa-user"></i>
+                                        </a>
+                                    }
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center text-muted mt-4">
+                    <p>No food items found. Try adjusting your filters.</p>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</section>

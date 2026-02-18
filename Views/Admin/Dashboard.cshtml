@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<section class="food_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>Admin Dashboard</h2>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card text-center border-primary h-100 shadow">
+                    <div class="card-body">
+                        <i class="fa fa-users fa-3x text-primary mb-3"></i>
+                        <h4>@ViewBag.Users</h4>
+                        <p>Registered Users</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card text-center border-success h-100 shadow">
+                    <div class="card-body">
+                        <i class="fa fa-store fa-3x text-success mb-3"></i>
+                        <h4>@ViewBag.Restaurants</h4>
+                        <p>Restaurants</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card text-center border-warning h-100 shadow">
+                    <div class="card-body">
+                        <i class="fa fa-receipt fa-3x text-warning mb-3"></i>
+                        <h4>@ViewBag.Orders</h4>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card text-center border-danger h-100 shadow">
+                    <div class="card-body">
+                        <i class="fa fa-dollar-sign fa-3x text-danger mb-3"></i>
+                        <h4>$@ViewBag.Revenue.ToString("0.00")</h4>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="@Url.Action("Orders", "Admin")" class="btn btn-outline-dark btn-lg">
+                <i class="fa fa-list"></i> Manage Orders
+            </a>
+            <a href="@Url.Action("Restaurants", "Admin")" class="btn btn-outline-primary btn-lg ms-3">
+                <i class="fa fa-utensils"></i> Manage Restaurants
+            </a>
+        </div>
+    </div>
+</section>

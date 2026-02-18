@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Mais_Kitchen.Models.FoodItem>
+
+@{
+    ViewData["Title"] = "Manage Food Items";
+}
+
+<section class="food_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center mb-4">
+            <h2>Manage Food Items</h2>
+            <a href="@Url.Action("AddFoodItem", "Admin")" class="btn btn-primary mt-2">
+                <i class="fa fa-plus"></i> Add Food
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Restaurant</th>
+                        <th>Price</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th style="width:130px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center text-muted py-4">
+                                No food items found.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var f in Model)
+                        {
+                            <tr>
+                                <!-- Image -->
+                                <td>
+                                    <img src="@(string.IsNullOrEmpty(f.ImageUrl)
+                                                                                     ? "/images/default-food.jpg"
+                                                                                     : f.ImageUrl)"
+                                 width="60"
+                                 height="60"
+                                 class="rounded object-fit-cover"
+                                 alt="Food Image" />
+                        </td>
+
+                                <!-- Name -->
+                                <td>@f.FoodName</td>
+
+                                <!-- Category -->
+                                <td>@(f.Category?.CategoryName ?? "—")</td>
+
+                                <!-- Restaurant -->
+                                <td>@(f.Restaurant?.RestaurantName ?? "—")</td>
+
+                                <!-- Price -->
+                                <td>
+                                    <span class="fw-bold text-success">
+                                        $@f.Price.ToString("0.00")
+                                    </span>
+                                </td>
+
+                                <!-- Veg -->
+                                <td>
+                                    <span class="badge @(f.IsVeg ? "bg-success" : "bg-secondary")">
+                                        @(f.IsVeg ? "Veg" : "Non-Veg")
+                                    </span>
+                                </td>
+
+                                <!-- Availability -->
+                                <td>
+                                    <span class="badge @(f.IsAvailable ? "bg-success" : "bg-danger")">
+                                        @(f.IsAvailable ? "Available" : "Unavailable")
+                                    </span>
+                                </td>
+
+                                <!-- Actions -->
+                                <td>
+                                    <a href="@Url.Action("EditFoodItem", "Admin", new { id = f.FoodItemID })"
+                                       class="btn btn-sm btn-warning">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+
+                                    <form asp-action="DeleteFoodItem"
+                                          method="post"
+                                          class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@f.FoodItemID" />
+                                        <button type="submit"
+                                                class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Delete this food item?');">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

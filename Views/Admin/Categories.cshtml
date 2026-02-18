@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Mais_Kitchen.Models.Category>
+
+@{
+    ViewData["Title"] = "Manage Categories";
+}
+
+<section class="food_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center mb-4">
+            <h2>Category Management</h2>
+        </div>
+
+        <div class="text-end mb-3">
+            <a asp-action="AddCategory"
+               class="btn btn-success px-4">
+                + Add Category
+            </a>
+        </div>
+
+        <div class="card shadow-sm p-3">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th width="180">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl"
+                                         width="60"
+                                         class="rounded shadow-sm" />
+                                }
+                            </td>
+                            <td>@item.CategoryName</td>
+                            <td>
+                                @if (item.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="EditCategory"
+                                   asp-route-id="@item.CategoryID"
+                                   class="btn btn-warning btn-sm">
+                                    Edit
+                                </a>
+
+                                <form asp-action="DeleteCategory"
+                                      asp-route-id="@item.CategoryID"
+                                      method="post"
+                                      class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Delete this category?')">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

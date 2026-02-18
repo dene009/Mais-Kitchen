@@ -1,0 +1,54 @@
+﻿@model Mais_Kitchen.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Login | Mai's Kitchen";
+}
+
+<section class="food_section layout_padding" style="background:#fff;">
+    <div class="container">
+        <div class="heading_container heading_center mb-5">
+            <h2 class="text-danger">Welcome Back to <span class="text-dark">Mai’s Kitchen</span></h2>
+            <p class="text-muted">Sign in to order your favorite meals faster</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-5">
+                        <form asp-action="Login" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="Email" class="fw-bold text-dark">Email Address</label>
+                                <input asp-for="Email" class="form-control form-control-lg" placeholder="Enter email" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label asp-for="Password" class="fw-bold text-dark">Password</label>
+                                <input asp-for="Password" type="password" class="form-control form-control-lg" placeholder="Enter password" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-check mb-4">
+                                <input asp-for="RememberMe" class="form-check-input" />
+                                <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-danger btn-lg w-100 text-uppercase fw-bold">
+                                <i class="fa fa-sign-in-alt"></i> Login
+                            </button>
+
+                            <div class="text-center mt-4">
+                                <p>Don't have an account? <a href="@Url.Action("Register", "Account")" class="text-danger fw-bold">Register Now</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Order Success";
+}
+
+<section class="food_section layout_padding">
+    <div class="container text-center">
+        <i class="fa fa-check-circle fa-5x text-success mb-4"></i>
+        <h2>Thank you for your order!</h2>
+        <p class="lead mt-3">Your order has been placed successfully. You will receive a confirmation shortly.</p>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-warning mt-4">
+            <i class="fa fa-home"></i> Continue Shopping
+        </a>
+    </div>
+</section>

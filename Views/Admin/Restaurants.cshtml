@@ -1,0 +1,148 @@
+﻿@model IEnumerable<Mais_Kitchen.Models.Restaurant>
+
+@{
+    ViewData["Title"] = "Manage Restaurants";
+
+    var restaurants = Model ?? Enumerable.Empty<Mais_Kitchen.Models.Restaurant>();
+}
+
+<section class="food_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center mb-4">
+            <h2>Manage Restaurants</h2>
+
+            <a asp-controller="Admin"
+                   asp-action="AddRestaurant"
+                   class="btn btn-primary mt-2">
+                <i class="fa fa-plus"></i> Add Restaurant
+            </a>
+        </div>
+
+        <div class="table-responsive mt-4">
+            <table class="table table-hover shadow-sm align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Rating</th>
+                        <th>Delivery</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th style="width:130px;">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (!restaurants.Any())
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center text-muted py-4">
+                                No restaurants found.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var r in restaurants)
+                        {
+                            var imageUrl = string.IsNullOrWhiteSpace(r?.ImageUrl)
+                                ? "/images/default-restaurant.jpg"
+                                : r.ImageUrl;
+
+                            var description = r?.Description;
+
+                            <tr>
+                                <td>
+                                    <img src="@imageUrl"
+                                         width="60"
+                                         height="60"
+                                         class="rounded object-fit-cover"
+                                         alt="Restaurant Image" />
+                                </td>
+
+                                <td>@(r?.RestaurantName ?? "—")</td>
+
+                                <td>
+                                    @{
+                                        if (string.IsNullOrWhiteSpace(description))
+                                        {
+                                            @:—
+                                        }
+                                        else if (description.Length > 50)
+                                        {
+                                            @(description.Substring(0, 50) + "...")
+                                        }
+                                        else
+                                        {
+                                            @description
+                                        }
+                                    }
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-warning text-dark">
+                                        @(r?.Rating.ToString("0.0") ?? "0.0") ★
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <small>
+                                        @(r?.DeliveryTime ?? 0) min /
+                                        $@((r?.DeliveryFee ?? 0M).ToString("0.00"))
+                                    </small>
+                                </td>
+
+                                <td>
+                                    <span class="badge @(r?.IsActive == true ? "bg-success" : "bg-danger")">
+                                        @(r?.IsActive == true ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @{
+                                        var createdDate = r?.CreatedDate;
+
+                                        if (createdDate is DateTime dt)
+                                        {
+                                            @dt.ToString("MM/dd/yyyy")
+                                        }
+                                        else
+                                        {
+                                            @:—
+                                        }
+                                    }
+                                </td>
+
+                                <td>
+                                    <a asp-controller="Admin"
+                                           asp-action="EditRestaurant"
+                                           asp-route-id="@r?.RestaurantID"
+                                           class="btn btn-sm btn-warning">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+
+                                    <form asp-action="DeleteRestaurant"
+                                          method="post"
+                                          class="d-inline">
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@r?.RestaurantID" />
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Delete this restaurant?');">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

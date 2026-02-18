@@ -1,0 +1,88 @@
+﻿@model Mais_Kitchen.Models.Category
+
+@{
+    ViewData["Title"] = Model.CategoryID == 0 ? "Add Category" : "Edit Category";
+}
+
+<section class="food_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center mb-4">
+            <h2>@ViewData["Title"]</h2>
+        </div>
+
+        <form asp-action="@(Model.CategoryID == 0 ? "AddCategory" : "EditCategory")"
+              method="post"
+              enctype="multipart/form-data"
+              class="card p-4 shadow-sm">
+
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="CategoryID" />
+
+            <!-- Validation Summary -->
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- Category Name -->
+            <div class="mb-3">
+                <label asp-for="CategoryName" class="form-label"></label>
+                <input asp-for="CategoryName" class="form-control" />
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description"
+                          class="form-control"
+                          rows="3"></textarea>
+                <span asp-validation-for="Description"
+                      class="text-danger"></span>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="mb-3">
+                <label class="form-label">Category Image</label>
+                <input type="file"
+                       name="imageFile"
+                       accept="image/*"
+                       class="form-control" />
+
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <div class="mt-3">
+                        <small class="text-muted">Current Image:</small><br />
+                        <img src="@Model.ImageUrl"
+                             width="120"
+                             class="rounded shadow-sm mt-2"
+                             alt="Category Image" />
+                    </div>
+                }
+            </div>
+
+            <!-- Active Toggle -->
+            <div class="form-check mb-4">
+                <input asp-for="IsActive"
+                       class="form-check-input" />
+                <label asp-for="IsActive"
+                       class="form-check-label"></label>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between">
+                <a href="@Url.Action("Categories", "Admin")"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="btn btn-success px-4">
+                    Save
+                </button>
+            </div>
+
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
