@@ -8,212 +8,250 @@
     var featuredItems = Model.FeaturedItems ?? Enumerable.Empty<Mais_Kitchen.Models.FoodItem>();
 }
 
-<!-- Hero Section - Always visible -->
-<section class="slider_section">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="detail-box text-center py-5">
-                    <h1>Welcome to Mai's Kitchen</h1>
-                    <p>Order delicious food from your favorite restaurants</p>
-                    <div class="btn-box mt-4">
-                        <a href="@Url.Action("Menu", "Home")" class="btn btn-primary btn-lg">Order Now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- Hero Area with Background -->
+<div class="hero_area">
+    <div class="bg-box">
+        <img src="~/images/hero-bg.jpg" alt="">
     </div>
-</section>
 
-<!-- Categories Section -->
-<section class="food_section layout_padding">
-    <div class="container">
-        <div class="heading_container heading_center mb-4">
-            <h2>Browse By <span>Category</span></h2>
-        </div>
-
-        @if (categories.Any())
-        {
-            <div class="row justify-content-center">
-                @foreach (var category in categories)
-                {
-                    var categoryName = category?.CategoryName ?? "Other";
-                    var lowerName = categoryName.ToLowerInvariant();
-
-                    <div class="col-lg-2 col-md-4 col-6 mb-4">
-                        <a href="@Url.Action("Menu", "Home", new { categoryId = category?.CategoryID })"
-                           class="text-decoration-none">
-
-                            <div class="category-card">
-                                @switch (lowerName)
-                                {
-                                    case "pizza":
-                                        <i class="fas fa-pizza-slice"></i>
-                                        break;
-                                    case "burgers":
-                                        <i class="fas fa-hamburger"></i>
-                                        break;
-                                    case "chinese":
-                                        <i class="fas fa-dragon"></i>
-                                        break;
-                                    case "indian":
-                                        <i class="fas fa-pepper-hot"></i>
-                                        break;
-                                    case "desserts":
-                                        <i class="fas fa-ice-cream"></i>
-                                        break;
-                                    default:
-                                        <i class="fas fa-utensils"></i>
-                                        break;
-                                }
-
-                                <h6 class="mt-2">@categoryName</h6>
-                            </div>
-                        </a>
-                    </div>
-                }
-            </div>
-        }
-        else
-        {
-            <div class="alert alert-info text-center">
-                <p>No categories available at the moment. Our menu is being updated!</p>
-            </div>
-        }
-    </div>
-</section>
-
-<!-- Restaurants Section -->
-<section class="restaurant_section layout_padding">
-    <div class="container">
-        <div class="heading_container heading_center mb-4">
-            <h2>Top <span>Restaurants</span></h2>
-        </div>
-
-        @if (restaurants.Any())
-        {
-            <div class="row">
-                @foreach (var restaurant in restaurants)
-                {
-                    var imageUrl = string.IsNullOrWhiteSpace(restaurant?.ImageUrl)
-                        ? "/images/default-restaurant.jpg"
-                        : restaurant.ImageUrl;
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <div class="card restaurant-card h-100">
-                            <img src="@imageUrl"
-                                 class="card-img-top"
-                                 alt="@(restaurant?.RestaurantName ?? "Restaurant")">
-
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">
-                                    @(restaurant?.RestaurantName ?? "Restaurant")
-                                </h5>
-
-                                <p class="card-text text-muted flex-grow-1">
-                                    @(restaurant?.Description ?? "No description available.")
-                                </p>
-
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="badge-rating">
-                                        <i class="fas fa-star"></i>
-                                        @(restaurant?.Rating.ToString("F1") ?? "0.0")
-                                    </span>
-
-                                    <span class="text-muted">
-                                        <i class="fas fa-clock"></i>
-                                        @(restaurant?.DeliveryTime ?? 0) min
-                                    </span>
+    <!-- Hero/Slider Section -->
+    <section class="slider_section">
+        <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-7 col-lg-6">
+                                <div class="detail-box">
+                                    <h1>Welcome to Mai's Kitchen</h1>
+                                    <p>
+                                        Order delicious food from your favorite restaurants. 
+                                        Fresh, fast, and hot food delivered right to your doorstep!
+                                    </p>
+                                    <div class="btn-box">
+                                        <a href="@Url.Action("Menu", "Home")" class="btn1">
+                                            Order Now
+                                        </a>
+                                    </div>
                                 </div>
-
-                                <a href="@Url.Action("RestaurantDetails", "Home", new { id = restaurant?.RestaurantID })"
-                                   class="btn btn-primary mt-3">
-                                    View Menu
-                                </a>
                             </div>
                         </div>
                     </div>
-                }
+                </div>
+                <div class="carousel-item">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-7 col-lg-6">
+                                <div class="detail-box">
+                                    <h1>Browse Top Restaurants</h1>
+                                    <p>
+                                        Explore a wide variety of cuisines from the best restaurants in your area.
+                                        Quality food at great prices!
+                                    </p>
+                                    <div class="btn-box">
+                                        <a href="@Url.Action("Restaurants", "Home")" class="btn1">
+                                            View Restaurants
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-7 col-lg-6">
+                                <div class="detail-box">
+                                    <h1>Fast & Fresh Delivery</h1>
+                                    <p>
+                                        Get your favorite meals delivered hot and fresh. 
+                                        Quick service, quality guaranteed!
+                                    </p>
+                                    <div class="btn-box">
+                                        <a href="@Url.Action("Menu", "Home")" class="btn1">
+                                            Order Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        }
-        else
-        {
-            <div class="alert alert-info text-center">
-                <p>No restaurants available at the moment. Check back soon!</p>
+            <div class="container">
+                <ol class="carousel-indicators">
+                    <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
+                    <li data-target="#customCarousel1" data-slide-to="1"></li>
+                    <li data-target="#customCarousel1" data-slide-to="2"></li>
+                </ol>
             </div>
-        }
+        </div>
+    </section>
+</div>
+
+<!-- Offer Section - Shows Top Restaurants -->
+<section class="offer_section layout_padding-bottom">
+    <div class="offer_container">
+        <div class="container">
+            @if (restaurants.Any())
+            {
+                <div class="row">
+                    @foreach (var restaurant in restaurants.Take(2))
+                    {
+                        var imageUrl = string.IsNullOrWhiteSpace(restaurant?.ImageUrl)
+                            ? "/images/o1.jpg"
+                            : restaurant.ImageUrl;
+
+                        <div class="col-md-6">
+                            <div class="box">
+                                <div class="img-box">
+                                    <img src="@imageUrl" alt="@(restaurant?.RestaurantName ?? "Restaurant")">
+                                </div>
+                                <div class="detail-box">
+                                    <h5>@(restaurant?.RestaurantName ?? "Restaurant")</h5>
+                                    <h6>
+                                        <i class="fa fa-star" style="color: #ffbe33;"></i>
+                                        @(restaurant?.Rating.ToString("F1") ?? "0.0") Rating
+                                    </h6>
+                                    <a href="@Url.Action("RestaurantDetails", "Home", new { id = restaurant?.RestaurantID })">
+                                        View Menu
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                                            <g>
+                                                <g>
+                                                    <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
+                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
+                                                </g>
+                                            </g>
+                                            <g>
+                                                <g>
+                                                    <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
+                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
+                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
+                         C457.728,97.71,450.56,86.958,439.296,84.91z" />
+                                                </g>
+                                            </g>
+                                            <g>
+                                                <g>
+                                                    <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
+                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
     </div>
 </section>
 
 <!-- Featured Items Section -->
-<section class="featured_section layout_padding">
+<section class="food_section layout_padding-bottom">
     <div class="container">
-        <div class="heading_container heading_center mb-4">
-            <h2>Featured <span>Items</span></h2>
+        <div class="heading_container heading_center">
+            <h2>Our Menu</h2>
         </div>
 
         @if (featuredItems.Any())
         {
-            <div class="row">
-                @foreach (var item in featuredItems)
+            <ul class="filters_menu">
+                <li class="active" data-filter="*">All</li>
+                @foreach (var category in categories.Take(5))
                 {
-                    var imageUrl = string.IsNullOrWhiteSpace(item?.ImageUrl)
-                        ? "/images/default-food.jpg"
-                        : item.ImageUrl;
+                    <li data-filter=".@category.CategoryName.ToLower()">@category.CategoryName</li>
+                }
+            </ul>
 
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <div class="card food-card h-100">
-                            <img src="@imageUrl"
-                                 class="card-img-top"
-                                 alt="@(item?.FoodName ?? "Food Item")">
+            <div class="filters-content">
+                <div class="row grid">
+                    @foreach (var item in featuredItems)
+                    {
+                        var imageUrl = string.IsNullOrWhiteSpace(item?.ImageUrl)
+                            ? "/images/f1.png"
+                            : item.ImageUrl;
 
-                            <div class="card-body d-flex flex-column">
+                        var categoryClass = item?.Category?.CategoryName?.ToLower() ?? "other";
 
-                                <h5 class="card-title">
-                                    @(item?.FoodName ?? "Food Item")
-                                </h5>
-
-                                <p class="card-text text-muted small">
-                                    @(item?.Restaurant?.RestaurantName ?? "Unknown Restaurant")
-                                </p>
-
-                                <p class="card-text flex-grow-1">
-                                    @(item?.Description ?? "No description available.")
-                                </p>
-
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="food-price">
-                                        $@(item?.Price.ToString("F2") ?? "0.00")
-                                    </span>
-
-                                    @if (item?.IsVeg == true)
-                                    {
-                                        <span class="badge bg-success">Veg</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-danger">Non-Veg</span>
-                                    }
+                        <div class="col-sm-6 col-lg-4 all @categoryClass">
+                            <div class="box">
+                                <div>
+                                    <div class="img-box">
+                                        <img src="@imageUrl" alt="@(item?.FoodName ?? "Food Item")">
+                                    </div>
+                                    <div class="detail-box">
+                                        <h5>@(item?.FoodName ?? "Food Item")</h5>
+                                        <p>@(item?.Description ?? "Delicious food item")</p>
+                                        <div class="options">
+                                            <h6>$@(item?.Price.ToString("F2") ?? "0.00")</h6>
+                                            @if (User?.Identity?.IsAuthenticated == true)
+                                            {
+                                                <a href="#" onclick="addToCart(@(item?.FoodItemID ?? 0)); return false;">
+                                                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                                                        <g>
+                                                            <g>
+                                                                <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
+                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
+                                                            </g>
+                                                        </g>
+                                                        <g>
+                                                            <g>
+                                                                <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
+                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
+                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
+                         C457.728,97.71,450.56,86.958,439.296,84.91z" />
+                                                            </g>
+                                                        </g>
+                                                        <g>
+                                                            <g>
+                                                                <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
+                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
+                                                            </g>
+                                                        </g>
+                                                    </svg>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("Login", "Account")">
+                                                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                                                        <g>
+                                                            <g>
+                                                                <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
+                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
+                                                            </g>
+                                                        </g>
+                                                        <g>
+                                                            <g>
+                                                                <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
+                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
+                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
+                         C457.728,97.71,450.56,86.958,439.296,84.91z" />
+                                                            </g>
+                                                        </g>
+                                                        <g>
+                                                            <g>
+                                                                <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
+                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
+                                                            </g>
+                                                        </g>
+                                                    </svg>
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
-
-                                @if (User?.Identity?.IsAuthenticated == true)
-                                {
-                                    <button class="btn btn-primary mt-3"
-                                            onclick="addToCart(@(item?.FoodItemID ?? 0))">
-                                        <i class="fas fa-plus"></i> Add to Cart
-                                    </button>
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("Login", "Account")"
-                                       class="btn btn-outline-primary mt-3">
-                                        Login to Order
-                                    </a>
-                                }
                             </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
+            </div>
+
+            <div class="btn-box">
+                <a href="@Url.Action("Menu", "Home")">View More</a>
             </div>
         }
         else
@@ -224,4 +262,70 @@
         }
     </div>
 </section>
+
+<!-- About Section -->
+<section class="about_section layout_padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="img-box">
+                    <img src="~/images/about-img.png" alt="">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="detail-box">
+                    <div class="heading_container">
+                        <h2>We Are Mai's Kitchen</h2>
+                    </div>
+                    <p>
+                        Welcome to Mai's Kitchen - your ultimate destination for delicious food delivery! 
+                        We partner with the best restaurants in town to bring you a wide variety of cuisines 
+                        right to your doorstep.
+                    </p>
+                    <p>
+                        Our mission is simple: connect food lovers with their favorite restaurants and deliver 
+                        fresh, hot meals quickly and efficiently. Whether you're craving pizza, burgers, 
+                        Chinese, Indian, or desserts, we've got you covered!
+                    </p>
+                    <a href="@Url.Action("Menu", "Home")">
+                        Order Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        function addToCart(foodItemId) {
+            if (!foodItemId) {
+                alert('Invalid food item');
+                return;
+            }
+
+            fetch('@Url.Action("AddToCart", "Cart")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                },
+                body: JSON.stringify({ foodItemId: foodItemId, quantity: 1 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Item added to cart successfully!');
+                    // Optionally update cart count in header
+                } else {
+                    alert(data.message || 'Failed to add item to cart');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while adding to cart');
+            });
+        }
+    </script>
+}
 
