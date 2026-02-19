@@ -14,6 +14,7 @@ namespace Mais_Kitchen.Data
                     new Category { CategoryName = "Burgers", IsActive = true },
                     new Category { CategoryName = "Desserts", IsActive = true }
                 );
+                context.SaveChanges();
             }
 
             if (!context.Restaurants.Any())
@@ -44,11 +45,11 @@ namespace Mais_Kitchen.Data
                         DeliveryFee = 1.5m
                     }
                 );
+                context.SaveChanges();
             }
 
-            // persist them before querying
-            context.SaveChanges();
-
+            // Note: Must persist Categories and Restaurants before creating FoodItems
+            // because FoodItems queries reference data
             if (!context.FoodItems.Any())
             {
                 var firstRestaurant = context.Restaurants.First();

@@ -10,9 +10,12 @@ namespace Mais_Kitchen.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public HomeController(ApplicationDbContext context)
+        private readonly ILogger<HomeController> _logger;
+
+        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger)
         {
             _context = context;
+            _logger = logger;
         }
         public async Task<IActionResult> Index()
         {
@@ -34,6 +37,10 @@ namespace Mais_Kitchen.Controllers
                 .OrderBy(f => Guid.NewGuid())
                 .Take(12)
                 .ToListAsync();
+
+            // Debug logging
+            _logger.LogInformation("Home Index loaded - Categories: {CategoryCount}, Restaurants: {RestaurantCount}, FeaturedItems: {FeaturedItemCount}", 
+                categories.Count, restaurants.Count, featuredItems.Count);
 
             var model = new
             {
