@@ -38,22 +38,18 @@ namespace Mais_Kitchen.Controllers
                 .Take(12)
                 .ToListAsync();
 
-            // Debug logging
-            _logger.LogInformation("Home Index loaded - Categories: {CategoryCount}, Restaurants: {RestaurantCount}, FeaturedItems: {FeaturedItemCount}", 
+            _logger.LogInformation(
+                "Home Index loaded - Categories: {CategoryCount}, Restaurants: {RestaurantCount}, FeaturedItems: {FeaturedItemCount}",
                 categories.Count, restaurants.Count, featuredItems.Count);
 
-            var model = new
+            var model = new HomeViewModel
             {
                 Categories = categories,
                 Restaurants = restaurants,
                 FeaturedItems = featuredItems
             };
 
-            // 👇 this line is the key
-            ViewBag.Model = model;
-
-            // do NOT pass model again, or it overrides ViewBag
-            return View();
+            return View(model);
         }
 
         public async Task<IActionResult> Restaurants()

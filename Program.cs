@@ -27,6 +27,7 @@ namespace Mais_Kitchen
 
             var app = builder.Build();
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
@@ -35,13 +36,6 @@ namespace Mais_Kitchen
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            using (var scope = app.Services.CreateScope())
-            {
-                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                db.Database.EnsureCreated();  // ensures DB exists
-                DataSeeder.Seed(db);          // 👈 run seeding
-            }
 
             app.Run();
         }

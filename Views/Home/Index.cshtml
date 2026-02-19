@@ -1,16 +1,11 @@
-﻿@{
+﻿@model Mais_Kitchen.ViewModels.HomeViewModel
+
+@{
     ViewData["Title"] = "Home";
 
-    var homeModel = ViewBag.Model;
-
-    var categories = homeModel?.Categories as IEnumerable<Mais_Kitchen.Models.Category>
-                     ?? Enumerable.Empty<Mais_Kitchen.Models.Category>();
-
-    var restaurants = homeModel?.Restaurants as IEnumerable<Mais_Kitchen.Models.Restaurant>
-                      ?? Enumerable.Empty<Mais_Kitchen.Models.Restaurant>();
-
-    var featuredItems = homeModel?.FeaturedItems as IEnumerable<Mais_Kitchen.Models.FoodItem>
-                        ?? Enumerable.Empty<Mais_Kitchen.Models.FoodItem>();
+    var categories = Model.Categories ?? Enumerable.Empty<Mais_Kitchen.Models.Category>();
+    var restaurants = Model.Restaurants ?? Enumerable.Empty<Mais_Kitchen.Models.Restaurant>();
+    var featuredItems = Model.FeaturedItems ?? Enumerable.Empty<Mais_Kitchen.Models.FoodItem>();
 }
 
 <!-- Hero Section - Always visible -->
