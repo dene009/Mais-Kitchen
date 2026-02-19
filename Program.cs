@@ -27,7 +27,7 @@ namespace Mais_Kitchen
 
             var app = builder.Build();
 
-            app.UseDefaultFiles();
+            // Removed UseDefaultFiles() - it was serving static HTML instead of MVC views
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
